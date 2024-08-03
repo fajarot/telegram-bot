@@ -187,6 +187,7 @@ bot.on("message", replyWithIntro);
 
 // Start the server
 if (process.env.NODE_ENV === "production") {
+  console.log("Production Mode");
   // Use Webhooks for the production server
   const app = express();
   app.use(express.json());
@@ -230,6 +231,7 @@ if (process.env.NODE_ENV === "production") {
     })
  });
 } else {
+  console.log("Developer Mode");
   // Use Long Polling for development
   bot.start();
 }
