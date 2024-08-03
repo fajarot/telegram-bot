@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "basestart": "node dist/bot.js",
-    "start": "JENKINS_ENV=jenkins env-cmd ts-node-dev src/bot.ts",
+    "start": "JENKINS_ENV=production env-cmd ts-node-dev src/bot.ts",
     "dev": "env-cmd ts-node-dev src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
