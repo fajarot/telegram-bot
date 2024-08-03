@@ -2,7 +2,7 @@ module.exports = {
     apps: [{
         name: "telebot",
         script: "npm",
-        args: "dev",
+        args: "start",
         env: {
             JENKINS_ENV: "production",
         },
