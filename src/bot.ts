@@ -2,6 +2,8 @@ import { Bot, InlineKeyboard, webhookCallback } from "grammy";
 import { chunk } from "lodash";
 import express from "express";
 import { applyTextEffect, Variant } from "./textEffects";
+import ngrok from '@ngrok/ngrok';
+import axios from 'axios';
 
 import type { Variant as TextEffectVariant } from "./textEffects";
 
@@ -9,7 +11,7 @@ import type { Variant as TextEffectVariant } from "./textEffects";
 const bot = new Bot(process.env.TELEGRAM_TOKEN || "");
 
 // Handle the /yo command to greet the user
-bot.command("yo", (ctx) => ctx.reply(`Yo ${ctx.from?.username}`));
+bot.command("yo", (ctx) => ctx.reply(`yoo @${ctx.from?.username} ngapain panggil2`));
 
 // Handle the /effect command to apply text effects using an inline keyboard
 type Effect = { code: TextEffectVariant; label: string };
@@ -191,9 +193,42 @@ if (process.env.NODE_ENV === "production") {
   app.use(webhookCallback(bot, "express"));
 
   const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
+  const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
+
+  const server = app.listen(PORT, () => {
     console.log(`Bot listening on port ${PORT}`);
+
+    // kode untuk build jenkins agar tidak stuck
+    if (process.env.JENKINS_ENV === 'jenkins') {
+      console.log('Server Started. Stopping Jenkins.');
+      process.exit(0);
+    }
   });
+
+  ngrok.connect({ addr: PORT, authtoken_from_env: true }).then(listener => {
+
+    const ngrok_url = listener.url();
+
+    console.log(`Ingress established at: ${ngrok_url}`)
+
+    console.log('\nSet Telegram Bot Webhook\n');
+
+    // Construct the URL
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/setWebhook?url=${ngrok_url}`
+
+    // Send the GET request using Axios
+
+    axios.get(url).then(response => {
+
+      console.log('Webhook set successfully:', response.data);
+
+      console.log('\n\nBot Ready to Use');
+
+    }).catch(error => {
+      console.error('Error setting webhook:', error);
+    })
+ });
 } else {
   // Use Long Polling for development
   bot.start();
