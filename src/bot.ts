@@ -96,6 +96,23 @@ bot.command("effect", (ctx) =>
   })
 );
 
+// Handle the "/quotes" command to get quotes from public api
+bot.command("quotes", async (ctx) => {
+  const QUOTES_URL = "https://api.quotable.io/quotes/random";
+  let result:string;
+
+  try {
+    const res = await axios.get(QUOTES_URL)
+    
+    result = res.data[0]
+  } catch (error) {
+    result = 'Gagal dapat quote'
+    console.error(result)
+  }
+
+  ctx.reply(`ini dia hasilnya ${result} tadaaaa`)
+})
+
 // Handle inline queries
 const queryRegEx = /effect (monospace|bold|italic) (.*)/;
 bot.inlineQuery(queryRegEx, async (ctx) => {
@@ -166,6 +183,7 @@ bot.api.setMyCommands([
     command: "effect",
     description: "Apply text effects on the text. (usage: /effect [text])",
   },
+  { command: "quotes", description: "Get Random Quotes of the Day"}
 ]);
 
 // Handle all other messages and the /start command
@@ -174,7 +192,8 @@ I'm powered by Cyclic, the next-generation serverless computing platform.
 
 <b>Commands</b>
 /yo - Be greeted by me
-/effect [text] - Show a keyboard to apply text effects to [text]`;
+/effect [text] - Show a keyboard to apply text effects to [text]
+/quotes - Get Random quotes of the day`;
 
 const replyWithIntro = (ctx: any) =>
   ctx.reply(introductionMessage, {
