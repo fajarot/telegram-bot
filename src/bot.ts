@@ -4,8 +4,11 @@ import express from "express";
 import { applyTextEffect, Variant } from "./textEffects";
 import ngrok from '@ngrok/ngrok';
 import axios from 'axios';
+import dotenv from "dotenv"
+dotenv.config();
 
 import type { Variant as TextEffectVariant } from "./textEffects";
+import {getRandomQuotes, sanitizeWord} from "./utils";
 
 // Create a bot using the Telegram token
 const bot = new Bot(process.env.TELEGRAM_TOKEN || "");
@@ -98,19 +101,22 @@ bot.command("effect", (ctx) =>
 
 // Handle the "/quotes" command to get quotes from public api
 bot.command("quotes", async (ctx) => {
-  const QUOTES_URL = "https://api.quotable.io/quotes/random";
   let result:string;
 
   try {
-    const res = await axios.get(QUOTES_URL)
+    const res = await getRandomQuotes()
+
+     const content = sanitizeWord(res.content);
+     const author = sanitizeWord(res.author);
+    result = `"*${content}*"
     
-    result = res.data[0]
+    \\- ___${author}_**__`
   } catch (error) {
-    result = 'Gagal dapat quote'
-    console.error(result)
+    result = 'Terjadi Kesalahan, Gagal mendapatkan Quote'
+    console.error(error)
   }
 
-  ctx.reply(`ini dia hasilnya ${result} tadaaaa`)
+  ctx.reply(result, {parse_mode : "MarkdownV2"})
 })
 
 // Handle inline queries
@@ -250,7 +256,7 @@ if (process.env.NODE_ENV === "production") {
     })
  });
 } else {
-  console.log("Developer Mode");
+  console.log(`${process.env.NODE_ENV || "Developer"} Mode`);
   // Use Long Polling for development
   bot.start();
 }
