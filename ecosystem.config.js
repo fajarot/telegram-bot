@@ -12,7 +12,7 @@ module.exports = {
       },
       autorestart: true,
     },
-    {
+    /*{
       name: "telebot-build",
       script: "npm",
       args: "run build",
@@ -22,6 +22,6 @@ module.exports = {
       },
       autorestart: false,
       watch: false,
-    },
+    },*/
   ],
 };
