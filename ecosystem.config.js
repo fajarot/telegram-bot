@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "telebot",
       script: "npm",
-      args: "run start",
+      args: "run jenkins",
       env: {
         JENKINS_ENV: "production",
       },
