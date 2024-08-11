@@ -111,12 +111,12 @@ bot.command("quotes", async (ctx) => {
     result = `"*${content}*"
     
     \\- ___${author}_**__`
+     ctx.reply(result, {parse_mode : "MarkdownV2"})
   } catch (error) {
     result = 'Terjadi Kesalahan, Gagal mendapatkan Quote'
     console.error(error)
+    ctx.reply(result)
   }
-
-  ctx.reply(result, {parse_mode : "MarkdownV2"})
 })
 
 // Handle inline queries
