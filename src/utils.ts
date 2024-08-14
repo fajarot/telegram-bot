@@ -5,13 +5,16 @@ export function sanitizeWord(kata: string): string {
 }
 
 export const getRandomQuotes = async (limit: number = 1) => {
-  const quote_url = `https://api.quotable.io/quotes/random?limit=${limit}`;
+  const quote_url = `https://zenquotes.io/api/random`;
   let result;
 
   try {
     const res = await axios.get(quote_url);
 
-    result = res.data[0];
+    result = {
+content: res.data[0].q,
+author: res.data[0].a,
+}
     //console.log("Berhasil");
     //   console.log(result)
   } catch (error) {
