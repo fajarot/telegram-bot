@@ -8,6 +8,7 @@
     "start": "node dist/bot.js",
     "jenkins": "JENKINS_ENV=production env-cmd ts-node-dev src/bot.ts",
     "dev": "env-cmd ts-node-dev src/bot.ts",
+    "docker": "ts-node-dev src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,7 +47,7 @@
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
-    "grammy": "^1.11.2",
+    "grammy": "1.11.2",
     "lodash": "^4.17.21"
   }
 }
